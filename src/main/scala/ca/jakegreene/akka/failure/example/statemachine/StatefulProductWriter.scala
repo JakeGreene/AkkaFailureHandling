@@ -13,9 +13,17 @@ case class NewClient(db: DatabaseClient) extends ControlMessage
  */
 class StatefulProductWriter(var db: DatabaseClient) extends Actor with UnboundedStash {
   
+  /*
+   * Our state is maintained after failure. This var will
+   * properly represent the number of processed messages
+   */
+  var messagesSeen = 0
+  
   def receive = GuardedReceive(onDbFailure) {
     case WriteProduct(product) => 
       db.write("PRODUCTS", product)
+      messagesSeen += 1
+      println(s"This actor has seen $messagesSeen messages")
       sender ! ProductWritten(product)
   }
   

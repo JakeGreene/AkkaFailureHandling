@@ -15,6 +15,6 @@ object KeepStateAndOrderOnError extends App {
   implicit val timeout = Timeout(1.minute)
   import system.dispatcher
   
-  val responses = Future.traverse(0 to 5)(id => supervisor ? WriteProduct(Product(id)))
+  val responses = Future.traverse(0 to 4)(id => supervisor ? WriteProduct(Product(id)))
   responses.foreach(_ => system.shutdown)
 }
