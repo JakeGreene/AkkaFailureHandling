@@ -15,6 +15,9 @@ import akka.dispatch.ProducesMessageQueue
 import akka.dispatch.ControlAwareMessageQueueSemantics
 import akka.dispatch.ControlMessage
 
+/**
+ * An UnboundedControlAwareMessageDequeMailbox is a ControlAwareMailbox with the proper semantics for an UnboundedStash
+ */
 final case class UnboundedControlAwareMessageDequeMailbox() extends MailboxType with ProducesMessageQueue[UnboundedControlAwareMessageDequeMailbox.MessageQueue] {
   def this(settings: ActorSystem.Settings, config: Config) = this()
   final override def create(owner: Option[ActorRef], system: Option[ActorSystem]): MessageQueue = {
