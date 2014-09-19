@@ -12,7 +12,7 @@ class FailureReactingSupervisor extends Actor {
   
   var failureRate = 1.0
 
-  val writer = context.actorOf(Props(classOf[StatefulProductWriter], new DatabaseClient(failureRate)))
+  val writer = context.actorOf(Props(classOf[StatefulProductWriter], new DatabaseClient(failureRate)), "stateful-product-writer")
 
   def receive: Receive = {
     /*
