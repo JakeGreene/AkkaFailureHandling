@@ -1,8 +1,10 @@
 package ca.jakegreene.akka.failure.example
 
+
 case class ConnectionException(msg: String) extends Exception(msg)
 
 class DatabaseClient(error: Double) {
+  @throws(classOf[ConnectionException])
   def write(table: String, entity: Any): Unit = {
     if (Math.random() < error) {
       println(s"Failed to Persist $entity to $table")

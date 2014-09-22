@@ -8,11 +8,11 @@ import akka.actor.Props
 
 case object DatabaseDown
 
-class FailureReactingSupervisor extends Actor {
+class FailureReactingSupervisor(dataProvider: DatabaseClientProvider) extends Actor {
   
   var failureRate = 1.0
 
-  val writer = context.actorOf(Props(classOf[StatefulProductWriter], new DatabaseClient(failureRate)), "stateful-product-writer")
+  val writer = context.actorOf(Props(classOf[StatefulProductWriter], dataProvider.get), "stateful-product-writer")
 
   def receive: Receive = {
     /*
@@ -21,7 +21,7 @@ class FailureReactingSupervisor extends Actor {
      */
     case DatabaseDown => 
       failureRate = failureRate / 2.0
-      writer ! NewClient(new DatabaseClient(failureRate))
+      writer ! NewClient(dataProvider.get(failureRate))
     case msg => writer forward msg
   }
 

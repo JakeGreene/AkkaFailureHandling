@@ -6,9 +6,9 @@ import akka.actor.SupervisorStrategy._
 import akka.actor.Props
 import ca.jakegreene.akka.failure.example._
 
-class RestartingWriteSupervisor extends Actor {
+class RestartingWriteSupervisor(dataProvider: DatabaseClientProvider) extends Actor {
   
-  val writer = context.actorOf(Props(classOf[RestartingProductWriter], new DatabaseClient(0.75)))
+  val writer = context.actorOf(Props(classOf[RestartingProductWriter], dataProvider.get))
   
   def receive: Receive = {
     case msg => writer forward msg
