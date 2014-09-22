@@ -12,7 +12,7 @@ The most common approach to handling failure is to restart the actor with the `R
 
 ### Stash
 
-The final example is able to retry messages while ensuring that every message is processed in order all while the internal state of the actor is maintained. The caveat is that this strategy is more complex than the others. The `Resume` directive is used in order to keep the actor instance alive and the `Stash` trait is used store all of the messages that could not be processed. Additionally, the actor is a simple state machine which will flip to a "database down" state until a new client is sent to it. For efficiencies sake a control-message-aware mailbox is used to allow the `NewClient` messages to pass right past the other queued messages.
+The final example is able to retry messages while ensuring that every message is processed in order all while the internal state of the actor is maintained. The caveat is that this strategy is more complex than the others. The `Resume` directive is used in order to keep the actor instance alive and the `Stash` trait is used store all of the messages that could not be processed. Additionally, the actor is a simple state machine which will flip to a error handling state until an error is resolved and it is in processing state again. For efficiencies sake a control-message-aware mailbox is used to allow the priority messages such as messages to resume the processing to pass right past the other queued messages.
 
 It is possible to mix these strategies depending on the needs of the actor but be warned: a complicated mix of strategies for handling failure may indicate the actor is attempting to do too much.
 
