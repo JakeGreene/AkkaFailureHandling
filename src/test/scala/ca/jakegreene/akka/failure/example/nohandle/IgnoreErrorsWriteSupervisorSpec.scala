@@ -16,6 +16,7 @@ import org.mockito.Matchers._
 import akka.testkit.TestActorRef
 import akka.actor.ActorRef
 import akka.actor.Actor
+import akka.actor.SupervisorStrategy._
 
 @RunWith(classOf[JUnitRunner])
 class IgnoreErrorsWriteSupervisorSpec extends TestKit(ActorSystem("system-with-no-handling")) 
@@ -40,27 +41,19 @@ with WordSpecLike with MustMatchers with StopSystemAfterAll with MockitoSugar {
 		  // Then
 		  expectMsg("hola")
 		}
-		
+				
 		"resume with exception" in {
 		 
-		  // Given    
-		  val mock = Props(new Actor {
+		  // Given  
+  		  val mock = Props(new Actor {
 			  def receive = {
-			    case ex: Exception => ex
-			    case x: String => testActor forward x
+			    case x => testActor forward x
 			  }
 		  })
+		  val actor = TestActorRef[IgnoreErrorsWriteSupervisor](Props(new IgnoreErrorsWriteSupervisor(mock)))
 		  
-		  val actor = system.actorOf(Props(new IgnoreErrorsWriteSupervisor(mock)))
-		  
-		  // When exception is thrown
-		  actor ! ConnectionException
-		  
-		  // When valid message is passed
-		  actor ! "hola"
-		  
-		  // Then actor should resume
-		  expectMsg("hola")
+		  // Then
+		  actor.underlyingActor.supervisorStrategy.decider(ConnectionException("oops")) must be (Resume)
 		}
     }		
 }

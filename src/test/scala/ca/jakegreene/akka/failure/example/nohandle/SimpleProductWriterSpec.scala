@@ -42,7 +42,7 @@ with WordSpecLike with MustMatchers with StopSystemAfterAll with MockitoSugar {
       // Given
       val databaseClient = mock[DatabaseClient]
       when(databaseClient.write(any(), any())).thenThrow(ConnectionException("Error!"))         
-      val actor = TestActorRef(Props(new SimpleProductWriter(databaseClient)))
+      val actor = TestActorRef[SimpleProductWriter](Props(new SimpleProductWriter(databaseClient)))
       
       // Then
       intercept[ConnectionException] {
