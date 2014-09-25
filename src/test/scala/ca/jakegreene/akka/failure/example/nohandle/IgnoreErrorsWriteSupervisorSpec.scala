@@ -41,7 +41,7 @@ with WordSpecLike with MustMatchers with StopSystemAfterAll with MockitoSugar {
 		  expectMsg("hola")
 		}
 		
-		"resume with eception" in {
+		"resume with exception" in {
 		 
 		  // Given    
 		  val mock = Props(new Actor {
