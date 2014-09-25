@@ -21,7 +21,7 @@ import ca.jakegreene.akka.failure._
  */
 object NoFailureHandling extends App {
   val system = ActorSystem("system-with-no-handling")
-  val supervisor = system.actorOf(Props(new IgnoreErrorsWriteSupervisor(new DatabaseClientProvider)))
+  val supervisor = system.actorOf(Props(new IgnoreErrorsWriteSupervisor(Props(classOf[SimpleProductWriter]))))
   (0L until 5).foreach { id =>
     supervisor ! WriteProduct(Product(id))
   }

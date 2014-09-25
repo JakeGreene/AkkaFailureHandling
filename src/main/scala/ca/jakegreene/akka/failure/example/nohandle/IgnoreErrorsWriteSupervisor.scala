@@ -8,9 +8,9 @@ import ca.jakegreene.akka.failure.example.ConnectionException
 import ca.jakegreene.akka.failure.example.DatabaseClient
 import ca.jakegreene.akka.failure.example.DatabaseClientProvider
 
-class IgnoreErrorsWriteSupervisor(dataProvider: DatabaseClientProvider) extends Actor {
+class IgnoreErrorsWriteSupervisor(p: Props) extends Actor {
   
-  val writer = context.actorOf(Props(classOf[SimpleProductWriter], dataProvider.get))
+  val writer = context.actorOf(p)
   
   def receive: Receive = {
     case msg => writer forward msg 
