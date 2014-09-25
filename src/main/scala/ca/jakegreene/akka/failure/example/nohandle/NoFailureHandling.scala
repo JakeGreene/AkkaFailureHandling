@@ -7,6 +7,7 @@ import akka.util.Timeout
 import scala.concurrent.duration._
 import akka.actor.actorRef2Scala
 import ca.jakegreene.akka.failure.example._
+import ca.jakegreene.akka.failure._
 
 /**
  * The NoFailureHandling Scenario:
@@ -20,7 +21,7 @@ import ca.jakegreene.akka.failure.example._
  */
 object NoFailureHandling extends App {
   val system = ActorSystem("system-with-no-handling")
-  val supervisor = system.actorOf(Props[IgnoreErrorsWriteSupervisor])
+  val supervisor = system.actorOf(Props(new IgnoreErrorsWriteSupervisor(Props(classOf[SimpleProductWriter]))))
   (0L until 5).foreach { id =>
     supervisor ! WriteProduct(Product(id))
   }

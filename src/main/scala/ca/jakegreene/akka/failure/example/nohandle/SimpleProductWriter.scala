@@ -7,9 +7,9 @@ import ca.jakegreene.akka.failure.example._
 case object Ping
 case object Pong
 
-class SimpleProductWriter(db: DatabaseClient) extends Actor {
+class SimpleProductWriter(f: => DatabaseClient) extends Actor {
   def receive: Receive = {
-    case WriteProduct(product) => db.write("PRODUCTS", product)
+    case WriteProduct(product) => f.write("PRODUCTS", product)
     case Ping => sender ! Pong
   }
 }
